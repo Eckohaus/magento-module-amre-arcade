@@ -15,4 +15,4 @@
 3. **Production Motor:** Linode (Pull from GitHub).
 
 ## 3. Administrative Note
-This module utilizes inline CSS overrides (`!important`) in the `.phtml` templates to maintain the "Green Phosphor" U
+This module utilizes inline CSS overrides (`!important`) in the `.phtml` templates to maintain the "Green Phosphor" UI across varied Magento theme states.
