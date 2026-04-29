@@ -64,7 +64,7 @@ class Calculate extends Action implements CsrfAwareActionInterface
 
         // 5. Contact the Fortran Engine (Internal Server Request)
         // ** CRITICAL: Ensure this port matches your /etc/nginx/sites-available/fortran-api configuration **
-        $fortranEndpoint = 'http://127.0.0.1:8080/calculate'; 
+        $fortranEndpoint = 'http://127.0.0.1:8080/api/base_equation.bin'; 
 
         $ch = curl_init($fortranEndpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

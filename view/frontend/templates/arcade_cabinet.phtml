@@ -9,8 +9,27 @@
         </div>
         
         <form id="amre-calc-form" class="hub-controls" style="flex-direction: column; align-items: center;">
-            <input type="text" id="fortran_data" name="fortran_data" required autocomplete="off" placeholder="[ ENTER PARAMETERS... ]" class="terminal-input">
-            <button type="submit" id="amre-submit-btn" class="t-btn">INITIALIZE RUN</button>
+            
+            <div class="control-panel">
+                <div class="input-group">
+                    <label>HIGH</label>
+                    <input type="number" id="input_high" value="1.0536" step="0.0001" required autocomplete="off" class="terminal-input">
+                </div>
+                <div class="input-group">
+                    <label>LOW</label>
+                    <input type="number" id="input_low" value="1.0247" step="0.0001" required autocomplete="off" class="terminal-input">
+                </div>
+                <div class="input-group">
+                    <label>LAMBDA</label>
+                    <input type="number" id="input_lambda" value="1.14" step="0.01" required autocomplete="off" class="terminal-input">
+                </div>
+                <div class="input-group">
+                    <label>DEPTH</label>
+                    <input type="number" id="input_depth" value="4" step="1" required autocomplete="off" class="terminal-input">
+                </div>
+            </div>
+
+            <button type="submit" id="amre-submit-btn" class="t-btn" style="margin-top: 15px;">INITIALIZE RUN</button>
         </form>
     </div>
 </div>
@@ -21,14 +40,24 @@ document.getElementById('amre-calc-form').addEventListener('submit', function(e)
     
     let outputConsole = document.getElementById('arcade-console-output');
     let btn = document.getElementById('amre-submit-btn');
-    let inputData = document.getElementById('fortran_data').value;
+    
+    // Extract the 4 parameters from the new matrix
+    let h = document.getElementById('input_high').value;
+    let l = document.getElementById('input_low').value;
+    let lam = document.getElementById('input_lambda').value;
+    let d = document.getElementById('input_depth').value;
+    
+    // Package the matrix into a single JSON payload for the Bouncer
+    let payloadData = JSON.stringify({ high: h, low: l, lambda: lam, depth: d });
     
     outputConsole.innerHTML += '<br><span style="color:#ffffff;">> TRANSMITTING PAYLOAD TO MOTOR...</span>';
+    outputConsole.innerHTML += '<br><span style="opacity:0.5;">> PARAMS: ' + payloadData + '</span>';
+    
     btn.disabled = true;
     btn.innerText = "PROCESSING...";
 
     let formData = new FormData();
-    formData.append('fortran_data', inputData);
+    formData.append('fortran_data', payloadData);
 
     // Send the AJAX request to our Bouncer controller
     fetch('/arcade/amre/calculate', {
@@ -43,8 +72,10 @@ document.getElementById('amre-calc-form').addEventListener('submit', function(e)
         if (data.status === 'success') {
             outputConsole.innerHTML += '<br><span style="color:#00ff00;">> [SUCCESS] ' + data.message + '</span>';
             outputConsole.innerHTML += '<br><span style="opacity:0.6;">> CREDITS REMAINING: ' + data.remaining_tokens + '</span>';
+            
             // Format the Fortran JSON response
-            outputConsole.innerHTML += '<br><span style="color:#ffffff;">> OUTPUT: ' + JSON.stringify(data.output) + '</span>'; 
+            let formattedOutput = typeof data.output === 'object' ? JSON.stringify(data.output, null, 2) : data.output;
+            outputConsole.innerHTML += '<br><span style="color:#ffffff; white-space: pre-wrap;">> OUTPUT: \n' + formattedOutput + '</span>'; 
         } else {
             // Display errors (Not logged in, insufficient funds, etc.)
             outputConsole.innerHTML += '<br><span style="color:red;">> [ERROR] ' + data.message + '</span>';
@@ -65,7 +96,16 @@ document.getElementById('amre-calc-form').addEventListener('submit', function(e)
 /* Arcade specific styling matching the Eckohaus OS Terminal vibe */
 .amre-arcade-cabinet { max-width: 600px; margin: 40px auto; font-family: 'Courier New', monospace; color: #ffffff; border: 1px solid rgba(255,255,255,0.2); padding: 30px; background: rgba(255,255,255,0.02); }
 .console-output { min-height: 200px; max-height: 400px; background: rgba(0,0,0,0.2); padding: 20px; border: 1px inset rgba(255,255,255,0.1); margin-bottom: 30px; font-size: 11px; line-height: 1.8; overflow-y: auto; letter-spacing: 1px; }
-.terminal-input { width: 100%; max-width: 400px; background: transparent; border: none; border-bottom: 1px solid rgba(255,255,255,0.5); color: #ffffff; font-family: 'Courier New', monospace; font-size: 12px; margin: 10px 0 30px; padding: 10px; outline: none; text-align: center; letter-spacing: 2px; }
-.terminal-input::placeholder { color: rgba(255,255,255,0.3); }
-.terminal-input:focus { border-bottom-color: #00ff00; color: #00ff00; }
+
+/* Matrix Input Styling */
+.control-panel { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px; }
+.input-group { display: flex; flex-direction: column; text-align: center; }
+.input-group label { font-size: 10px; color: #00ff00; margin-bottom: 5px; letter-spacing: 1px; }
+
+.terminal-input { background: transparent; border: 1px solid rgba(255,255,255,0.3); color: #ffffff; font-family: 'Courier New', monospace; font-size: 12px; padding: 8px; width: 110px; outline: none; text-align: center; }
+.terminal-input:focus { border-color: #00ff00; color: #00ff00; box-shadow: 0 0 5px rgba(0,255,0,0.2); }
+
+.t-btn { background: transparent; border: 1px solid #00ff00; color: #00ff00; padding: 10px 20px; font-family: 'Courier New', monospace; cursor: pointer; letter-spacing: 2px; transition: all 0.2s; }
+.t-btn:hover { background: rgba(0,255,0,0.1); box-shadow: 0 0 10px rgba(0,255,0,0.2); }
+.t-btn:disabled { border-color: #555; color: #555; cursor: not-allowed; }
 </style>
