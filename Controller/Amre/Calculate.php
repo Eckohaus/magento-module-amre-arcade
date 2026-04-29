@@ -59,18 +59,22 @@ class Calculate extends Action implements CsrfAwareActionInterface
         $wallet->setTokenBalance($balance - 1);
         $this->walletResource->save($wallet);
 
-        // 4. Extract User Input
+        // 4. Extract User Input & Translate to GET Parameters
         $payload = $this->getRequest()->getPostValue('fortran_data', '');
+        
+        // Decode the JSON string (e.g. {"high":"1.0536", "low":"1.0247"...}) back into a PHP array
+        $matrixData = json_decode($payload, true) ?: [];
 
-        // 5. Contact the Fortran Engine (Internal Server Request)
-        // ** CRITICAL: Ensure this port matches your /etc/nginx/sites-available/fortran-api configuration **
-        $fortranEndpoint = 'http://127.0.0.1:8080/api/base_equation.bin'; 
+        // Convert array to Fortran's expected URL format: high=x&low=y&lambda=z&depth=w
+        $queryString = http_build_query($matrixData);
+
+        // 5. Contact the Fortran Engine (Internal Server Request via GET)
+        // Target the absolute binary path directly and append the query string
+        $fortranEndpoint = 'http://127.0.0.1:8080/api/base_equation.bin?' . $queryString; 
 
         $ch = curl_init($fortranEndpoint);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode(['data' => $payload]));
-        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+        // Removed POST configurations. cURL now defaults to a standard GET request.
         
         // Execute the calculation
         $fortranResponse = curl_exec($ch);
