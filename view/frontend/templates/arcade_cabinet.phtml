@@ -1,3 +1,16 @@
+<style>
+.amre-arcade-cabinet { max-width: 600px; margin: 40px auto; font-family: 'Courier New', Courier, monospace !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; background: rgba(255, 255, 255, 0.02); }
+.amre-arcade-cabinet .console-output { min-height: 200px; max-height: 400px; background: rgba(0, 0, 0, 0.2); padding: 20px; border: 1px inset rgba(255, 255, 255, 0.1); margin-bottom: 30px; font-size: 11px !important; line-height: 1.8 !important; overflow-y: auto; letter-spacing: 1px; }
+.amre-arcade-cabinet .control-panel { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px; }
+.amre-arcade-cabinet .control-panel .input-group { display: flex; flex-direction: column; text-align: center; }
+.amre-arcade-cabinet .control-panel .input-group label { font-size: 10px !important; color: #00ff00 !important; margin-bottom: 5px; letter-spacing: 1px; }
+.amre-arcade-cabinet input.terminal-input[type="number"], .amre-arcade-cabinet input.terminal-input[type="text"] { background: transparent !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; opacity: 1 !important; font-family: 'Courier New', Courier, monospace !important; font-size: 12px !important; padding: 8px !important; width: 110px !important; outline: none !important; }
+.amre-arcade-cabinet input.terminal-input[type="number"]:focus, .amre-arcade-cabinet input.terminal-input[type="text"]:focus { border-color: #00ff00 !important; color: #00ff00 !important; -webkit-text-fill-color: #00ff00 !important; box-shadow: 0 0 5px rgba(0, 255, 0, 0.2) !important; }
+.amre-arcade-cabinet button.t-btn { background: transparent !important; border: 1px solid #00ff00 !important; color: #00ff00 !important; padding: 10px 20px !important; font-family: 'Courier New', Courier, monospace !important; cursor: pointer; letter-spacing: 2px !important; transition: all 0.2s ease-in-out; }
+.amre-arcade-cabinet button.t-btn:hover { background: rgba(0, 255, 0, 0.1) !important; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2) !important; }
+.amre-arcade-cabinet button.t-btn:disabled { border-color: #555 !important; color: #555 !important; -webkit-text-fill-color: #555 !important; cursor: not-allowed; }
+</style>
+
 <div class="amre-arcade-cabinet" id="amre-arcade-cabinet">
     <div class="cabinet-screen">
         <div class="hub-header">
