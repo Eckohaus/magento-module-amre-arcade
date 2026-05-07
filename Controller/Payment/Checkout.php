@@ -3,51 +3,55 @@ namespace Eckohaus\AmreArcade\Controller\Payment;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
-use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Framework\Encryption\EncryptorInterface;
 
 class Checkout extends Action
 {
-    protected $resultJsonFactory;
+    protected $resultRedirectFactory;
     protected $scopeConfig;
     protected $customerSession;
     protected $storeManager;
+    protected $encryptor;
 
     public function __construct(
         Context $context,
-        JsonFactory $resultJsonFactory,
+        RedirectFactory $resultRedirectFactory,
         ScopeConfigInterface $scopeConfig,
         CustomerSession $customerSession,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        EncryptorInterface $encryptor
     ) {
-        $this->resultJsonFactory = $resultJsonFactory;
+        $this->resultRedirectFactory = $resultRedirectFactory;
         $this->scopeConfig = $scopeConfig;
         $this->customerSession = $customerSession;
         $this->storeManager = $storeManager;
+        $this->encryptor = $encryptor;
         parent::__construct($context);
     }
 
     public function execute()
     {
-        $result = $this->resultJsonFactory->create();
+        $resultRedirect = $this->resultRedirectFactory->create();
 
         if (!$this->customerSession->isLoggedIn()) {
-            return $result->setData(['status' => 'error', 'message' => 'ACCESS DENIED: Please log in.']);
+            return $resultRedirect->setPath('downloadable/customer/products/');
         }
 
-        // Retrieve the encrypted API key from the database
-        $stripeSecret = $this->scopeConfig->getValue('amre_arcade/stripe/secret_key');
+        // Retrieve AND Decrypt the API key
+        $encryptedSecret = $this->scopeConfig->getValue('amre_arcade/stripe/secret_key');
+        $stripeSecret = $this->encryptor->decrypt($encryptedSecret);
         
         if (empty($stripeSecret)) {
-            return $result->setData(['status' => 'error', 'message' => 'GATEWAY OFFLINE: Configuration missing.']);
+             return $resultRedirect->setPath('downloadable/customer/products/');
         }
 
         $baseUrl = $this->storeManager->getStore()->getBaseUrl();
         $customerId = $this->customerSession->getCustomerId();
 
-        // Build the Stripe API Request Payload
         $stripePayload = http_build_query([
             'success_url' => $baseUrl . 'downloadable/customer/products/',
             'cancel_url' => $baseUrl . 'downloadable/customer/products/',
@@ -56,16 +60,15 @@ class Checkout extends Action
                     'price_data' => [
                         'currency' => 'gbp',
                         'product_data' => ['name' => 'AMRE Calculation Token // JUPITER-IV'],
-                        'unit_amount' => 100, // 100 pence = £1.00
+                        'unit_amount' => 100, // £1.00
                     ],
                     'quantity' => 1,
                 ],
             ],
             'mode' => 'payment',
-            'client_reference_id' => $customerId // Crucial: Tags the payment to your Magento user
+            'client_reference_id' => $customerId
         ]);
 
-        // Connect to Stripe via cURL
         $ch = curl_init('https://api.stripe.com/v1/checkout/sessions');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
@@ -82,9 +85,11 @@ class Checkout extends Action
         $stripeData = json_decode($response, true);
 
         if ($httpCode === 200 && isset($stripeData['url'])) {
-            return $result->setData(['status' => 'success', 'url' => $stripeData['url']]);
+            // INSTANT TELEPORT: Redirect straight to the Stripe URL
+            return $resultRedirect->setUrl($stripeData['url']);
         } else {
-            return $result->setData(['status' => 'error', 'message' => 'STRIPE FAILURE: ' . ($stripeData['error']['message'] ?? 'Unknown error')]);
+            // If it fails, silently return them to the terminal
+            return $resultRedirect->setPath('downloadable/customer/products/');
         }
     }
 }
