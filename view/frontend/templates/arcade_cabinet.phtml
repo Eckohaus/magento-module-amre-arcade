@@ -1,25 +1,118 @@
 <style>
-.amre-arcade-cabinet { max-width: 600px; margin: 40px auto; font-family: 'Courier New', Courier, monospace !important; color: #ffffff !important; border: 1px solid rgba(255, 255, 255, 0.2); padding: 30px; background: rgba(255, 255, 255, 0.02); }
-.amre-arcade-cabinet .console-output { min-height: 200px; max-height: 400px; background: rgba(0, 0, 0, 0.2); padding: 20px; border: 1px inset rgba(255, 255, 255, 0.1); margin-bottom: 30px; font-size: 11px !important; line-height: 1.8 !important; overflow-y: auto; letter-spacing: 1px; }
+/* --- AMRE ARCADE PORTABLE MODULE STYLES --- */
+.amre-arcade-cabinet { 
+    max-width: 600px; 
+    width: 100%; /* Added for mobile containment */
+    box-sizing: border-box; /* Ensures padding doesn't blow out the width */
+    margin: 40px auto; 
+    font-family: 'Courier New', Courier, monospace !important; 
+    color: #ffffff !important; 
+    border: 1px solid rgba(255, 255, 255, 0.2); 
+    padding: 30px; 
+    background: rgba(255, 255, 255, 0.02); 
+}
+
+.amre-arcade-cabinet .console-output { 
+    /* Dimensional Locks to prevent container expansion */
+    height: 250px !important;
+    min-height: 250px !important; 
+    max-height: 250px !important; 
+    
+    background: rgba(0, 0, 0, 0.2); 
+    padding: 20px; 
+    border: 1px inset rgba(255, 255, 255, 0.1); 
+    margin-bottom: 30px; 
+    font-size: 11px !important; 
+    line-height: 1.8 !important; 
+    
+    /* Scroll controls and alignment */
+    overflow-y: auto !important; 
+    overflow-x: hidden !important;
+    text-align: left !important;
+    letter-spacing: 1px; 
+    word-break: break-all;
+    white-space: pre-wrap;
+    box-sizing: border-box;
+}
+
+/* Custom Scrollbar scoped to this module */
+.amre-arcade-cabinet .console-output::-webkit-scrollbar { width: 10px; }
+.amre-arcade-cabinet .console-output::-webkit-scrollbar-track { background: #000000; border-left: 1px solid rgba(0, 255, 0, 0.2); }
+.amre-arcade-cabinet .console-output::-webkit-scrollbar-thumb { background: #00ff00; }
+.amre-arcade-cabinet .console-output::-webkit-scrollbar-thumb:hover { background: #00cc00; }
+
 .amre-arcade-cabinet .control-panel { display: flex; flex-wrap: wrap; gap: 15px; justify-content: center; margin-bottom: 20px; }
 .amre-arcade-cabinet .control-panel .input-group { display: flex; flex-direction: column; text-align: center; }
 .amre-arcade-cabinet .control-panel .input-group label { font-size: 10px !important; color: #00ff00 !important; margin-bottom: 5px; letter-spacing: 1px; }
-.amre-arcade-cabinet input.terminal-input[type="number"], .amre-arcade-cabinet input.terminal-input[type="text"] { background: transparent !important; border: 1px solid rgba(255, 255, 255, 0.3) !important; color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; opacity: 1 !important; font-family: 'Courier New', Courier, monospace !important; font-size: 12px !important; padding: 8px !important; width: 110px !important; outline: none !important; }
-.amre-arcade-cabinet input.terminal-input[type="number"]:focus, .amre-arcade-cabinet input.terminal-input[type="text"]:focus { border-color: #00ff00 !important; color: #00ff00 !important; -webkit-text-fill-color: #00ff00 !important; box-shadow: 0 0 5px rgba(0, 255, 0, 0.2) !important; }
-.amre-arcade-cabinet button.t-btn { background: transparent !important; border: 1px solid #00ff00 !important; color: #00ff00 !important; padding: 10px 20px !important; font-family: 'Courier New', Courier, monospace !important; cursor: pointer; letter-spacing: 2px !important; transition: all 0.2s ease-in-out; }
-.amre-arcade-cabinet button.t-btn:hover { background: rgba(0, 255, 0, 0.1) !important; box-shadow: 0 0 10px rgba(0, 255, 0, 0.2) !important; }
-.amre-arcade-cabinet button.t-btn:disabled { border-color: #555 !important; color: #555 !important; -webkit-text-fill-color: #555 !important; cursor: not-allowed; }
+
+.amre-arcade-cabinet input.terminal-input[type="number"], 
+.amre-arcade-cabinet input.terminal-input[type="text"] { 
+    background: transparent !important; 
+    border: 1px solid rgba(255, 255, 255, 0.3) !important; 
+    color: #ffffff !important; 
+    -webkit-text-fill-color: #ffffff !important; 
+    opacity: 1 !important; 
+    font-family: 'Courier New', Courier, monospace !important; 
+    font-size: 12px !important; 
+    padding: 8px !important; 
+    width: 110px !important; 
+    outline: none !important; 
+}
+.amre-arcade-cabinet input.terminal-input:focus { 
+    border-color: #00ff00 !important; 
+    color: #00ff00 !important; 
+    -webkit-text-fill-color: #00ff00 !important; 
+    box-shadow: 0 0 5px rgba(0, 255, 0, 0.2) !important; 
+}
+
+.amre-arcade-cabinet button.t-btn { 
+    background: transparent !important; 
+    border: 1px solid #00ff00 !important; 
+    color: #00ff00 !important; 
+    padding: 10px 20px !important; 
+    font-family: 'Courier New', Courier, monospace !important; 
+    cursor: pointer; 
+    letter-spacing: 2px !important; 
+    transition: all 0.2s ease-in-out; 
+}
+.amre-arcade-cabinet button.t-btn:hover { 
+    background: rgba(0, 255, 0, 0.1) !important; 
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.2) !important; 
+}
+.amre-arcade-cabinet button.t-btn:disabled { 
+    border-color: #555 !important; 
+    color: #555 !important; 
+    -webkit-text-fill-color: #555 !important; 
+    cursor: not-allowed; 
+}
+
+/* --- MOBILE LOCKS (PORTABILITY) --- */
+@media only screen and (max-width: 768px) {
+    .amre-arcade-cabinet {
+        border: none !important; /* Vaporize the outer box on small screens */
+        padding: 15px !important; /* Tighten up the internal spacing */
+        margin: 10px auto !important;
+        background: transparent !important;
+    }
+    
+    .amre-arcade-cabinet .control-panel {
+        gap: 10px; /* Bring the inputs slightly closer together */
+    }
+    
+    .amre-arcade-cabinet input.terminal-input[type="number"], 
+    .amre-arcade-cabinet input.terminal-input[type="text"] {
+        width: 130px !important; /* Slightly wider targets for touch screens */
+    }
+}
 </style>
 
 <div class="amre-arcade-cabinet" id="amre-arcade-cabinet">
     <div class="cabinet-screen">
         <div class="hub-header">
-            <div class="hub-title">AMRE // ANGULAR MOMENTUM REACTION ENGINE</div>
+            <div class="hub-title" style="margin-bottom: 25px;">AMRE // ANGULAR MOMENTUM REACTION ENGINE</div>
         </div>
         
-        <div id="arcade-console-output" class="console-output">
-            <span style="opacity: 0.5;">> SYSTEM ONLINE. AWAITING DATA INGESTION...</span>
-        </div>
+        <div id="arcade-console-output" class="console-output"><span style="opacity: 0.5;">> SYSTEM ONLINE. AWAITING DATA INGESTION...</span></div>
         
         <form id="amre-calc-form" class="hub-controls" style="display: flex; flex-direction: column; align-items: center;">
             
