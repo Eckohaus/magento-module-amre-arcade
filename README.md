@@ -1,20 +1,12 @@
-# AMRE Arcade Terminal (Magento 2 Module) - Eckohaus Indonesia
-
-**Description:** A relational interface layer for the Angular Momentum Reaction Engine (AMRE). This module facilitates 64-bit double-precision physics calculations by bridging the Magento 2 storefront with a self-hosted Fortran calculation motor.
-
-**Regional Integration Segment:** This repository is specifically configured for **Eckohaus Indonesia**, utilizing **Midtrans (QRIS/Virtual Account)** as the primary payment processor for AMRE Token transactions in IDR.
-
-**URL:** [https://kupu-home.com/terminal/amre-arcade-terminal](https://kupu-home.com/terminal/amre-arcade-terminal)
-
-## 1. Technical Architecture
-- **Protocol:** Translates frontend JSON payloads into GET query parameters.
-- **Endpoint:** Proxies requests to the internal Nginx gateway (Port 8080).
-- **Target:** `base_equation.bin` (Fortran Binary).
-
-## 2. Deployment Pipeline (Golden Rule)
-1. **Draft/Test:** Local OneDrive.
-2. **Master Copy:** GitHub (Push from local).
-3. **Production Motor:** Linode (Pull from GitHub).
-
-## 3. Administrative Note
-This module utilizes inline CSS overrides (`!important`) in the `.phtml` templates to maintain the "Green Phosphor" UI across varied Magento theme states.
+# Magento Module: AMRE Arcade (Core Engine) 
+ 
+The primary consumer-facing frontend translation interface for the Eckohaus commercial matrix. This Magento 2 module integrates high-gain CGI Fortran calculations from the core Angular Momentum Reaction Engine (AMRE) into interactive WebGL/Three.js canvases (Kupu Terminal/Spatial) tailored for regional CDN delivery. 
+ 
+## ?? Core Functionality 
+* **Visual Ledger:** Acts as an interactive schematic demonstrating the transcription of tributaries of light into matter, mapping Riccati-driven toroidal vectors to physical endpoints. 
+* **Frontend Integration:** Deploys targeted canvas environments mapped to distinct domains and compiled within dedicated `_extend.less` parameters. 
+ 
+## ?? Licensing & Legal Status 
+This module is a closed-source, proprietary framework operating under the **Eckohaus Proprietary Software License**. 
+ 
+> **Legal Notice:** The structural arrangement and architectural schema of this repository are currently under active application for formal software code registration with the **United States Copyright Office (USCO)**. Public visibility is maintained strictly for ecosystem transparency. Redistribution, replication, or unauthorized commercial deployment is expressly prohibited. Please refer to the `LICENSE` file for full parameters. 
